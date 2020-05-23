@@ -4,7 +4,7 @@
 #' @param Rn net radiation(unit:W/m2)
 #' @param RnL net long-wave radiation(unit:W/m2)
 #' @param Ts surface temperature(unit:Celsius)
-#' @param qs specific humidity(unit:hpa)
+#' @param qs specific humidity(unit:kg/kg)
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
 #' @return A list includes latent heat flux(EMEP),sensible heat flux(HMEP),ground heat flux(GMEP) and evapotranspiration(ETMEP)
 #' @examples
