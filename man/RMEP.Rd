@@ -11,7 +11,7 @@ RMEP(Rn, RnL, qs, Ts, type)
 
 \item{RnL}{net long-wave radiation(unit:W/m2)}
 
-\item{qs}{specific humidity(unit:hpa)}
+\item{qs}{specific humidity(unit:kg/kg)}
 
 \item{Ts}{surface temperature(unit:Celsius)}
 
