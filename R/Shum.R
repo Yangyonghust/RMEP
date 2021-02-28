@@ -1,5 +1,5 @@
 #' calculate specific humidity for MEP model input
-#' @param TA air temperature(unit: deg C)
+#' @param TA Air temperature(unit: deg C)
 #' @param RH Relative humidity(unit: percent)
 #' @param PA Atmospheric pressure(unit: kPa)
 #' @return specific humidity(unit:kg/kg)

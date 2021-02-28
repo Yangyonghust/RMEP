@@ -4,25 +4,30 @@
 \alias{RMEP}
 \title{Calculate energy fluxes and actual evapotranspiration}
 \usage{
-RMEP(Rn, RnL, qs, Ts, type)
+RMEP(Rn, RnL, qs, Ts, I = 600, z = 2.5, type = 1)
 }
 \arguments{
-\item{Rn}{net radiation(unit:W/m2)}
+\item{Rn}{net radiation (unit:W/m2)}
 
-\item{RnL}{net long-wave radiation(unit:W/m2)}
+\item{RnL}{net long-wave radiation (unit:W/m2)}
 
-\item{qs}{specific humidity(unit:kg/kg)}
+\item{qs}{specific humidity (unit:kg/kg)}
 
-\item{Ts}{surface temperature(unit:Celsius)}
+\item{Ts}{surface temperature (unit:Celsius)}
+
+\item{I}{media thermal inertial (units:TIU),default is 600 TIU}
+
+\item{z}{theoretical height above surface (unit:m), constant value and default is 2.5 m}
 
 \item{type}{1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface}
 }
 \value{
-A list includes latent heat flux(EMEP),sensible heat flux(HMEP),ground heat flux(GMEP) and evapotranspiration(ETMEP)
+A list includes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and evapotranspiration(ETMEP,mm/day)
 }
 \description{
 Calculate energy fluxes and evapotranspiration based on the maximum entropy production(MEP) model
 }
 \examples{
 RMEP(Rn=200,RnL=100,qs=0.003,Ts=20,type=1)
+RMEP(Rn=300,RnL=100,qs=0.004,Ts=25,I=800,z=8,type=1)
 }

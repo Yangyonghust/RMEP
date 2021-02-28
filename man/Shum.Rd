@@ -7,7 +7,7 @@
 Shum(TA, PA, RH)
 }
 \arguments{
-\item{TA}{air temperature(unit: deg C)}
+\item{TA}{Air temperature(unit: deg C)}
 
 \item{PA}{Atmospheric pressure(unit: kPa)}
 

@@ -1,21 +1,24 @@
 #' Calculate energy fluxes and actual evapotranspiration
 #'
 #' Calculate energy fluxes and evapotranspiration based on the maximum entropy production(MEP) model
-#' @param Rn net radiation(unit:W/m2)
-#' @param RnL net long-wave radiation(unit:W/m2)
-#' @param Ts surface temperature(unit:Celsius)
-#' @param qs specific humidity(unit:kg/kg)
+#' @param Rn net radiation (unit:W/m2)
+#' @param RnL net long-wave radiation (unit:W/m2)
+#' @param Ts surface temperature (unit:Celsius)
+#' @param qs specific humidity (unit:kg/kg)
+#' @param I media thermal inertial (units:TIU),default is 600 TIU
+#' @param z theoretical height above surface (unit:m), constant value and default is 2.5 m
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
-#' @return A list includes latent heat flux(EMEP),sensible heat flux(HMEP),ground heat flux(GMEP) and evapotranspiration(ETMEP)
+#' @return A list includes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and evapotranspiration(ETMEP,mm/day)
 #' @examples
 #' RMEP(Rn=200,RnL=100,qs=0.003,Ts=20,type=1)
+#' RMEP(Rn=300,RnL=100,qs=0.004,Ts=25,I=800,z=8,type=1)
 #' @export
-RMEP<-function(Rn, RnL, qs, Ts, type){
+RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
 
   # Parameters
   rhoa=Rn * 0 + 1.18                              # column vector of air density (kg*m^-3)
-  I=Rn * 0 + 600.0                                # thermal inertia of the material
-  z=Rn * 0 + 2.5                                  #lowest height of MOST applied (m)
+  I=Rn * 0 + I                                    # thermal inertia of the material(TIU)
+  z=Rn * 0 + z                                    # lowest height of MOST applied (m)
   T0 = Rn*0 + 273.15                              # freezing point
   Ts = Ts + T0                                    # Ts in K
   Tr = Rn*0 + 300                                 # reference temperature
@@ -103,7 +106,7 @@ RMEP<-function(Rn, RnL, qs, Ts, type){
       GMEP[ef_id[n]]=RnL[ef_id[n]] - HMEP[ef_id[n]] - EMEP[ef_id[n]];
     }
   }
-  return(list(ETMEP = EMEP * 0.0352653,HMEP = HMEP,EMEP = EMEP,GMEP = GMEP,ef_id = ef_id))   #1Wm-2=0.0864mmd-1
+  return(list(ETMEP = EMEP * 0.0352653,HMEP = HMEP,EMEP = EMEP,GMEP = GMEP,ef_id = ef_id))   #1W/m2=0.0352653 mm/day
 }
 
 
@@ -113,11 +116,15 @@ RMEP<-function(Rn, RnL, qs, Ts, type){
 #' @param Rn net radiation(unit:W/m2)
 #' @param RnL net long-wave radiation(unit:W/m2)
 #' @param Ts surface temperature(unit:Celsius)
+#' @param I media thermal inertial (units:TIU),default is 600 TIU
+#' @param z theoretical height above surface (unit:m),constant value and default is 2.5 m
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
-#' @return A list concludes latent heat flux(EMEP),sensible heat flux(HMEP),ground heat flux(GMEP) and potential ET(PETMEP)
-#' @examples RMEPPET(Rn=200,RnL=100,Ts=20,type=1)
+#' @return A list concludes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and potential ET(PETMEP,W/m2)
+#' @examples
+#' RMEPPET(Rn=200,RnL=100,Ts=20,type=1)
+#' RMEPPET(Rn=300,RnL=100,Ts=25,I=800,z=8,type=1)
 #' @export
-RMEPPET <- function(Rn, RnL,Ts,type){
+RMEPPET <- function(Rn, RnL,Ts,I=600, z=2.5, type=1){
   t_temp<-C2K(Ts)
   Es<-SVP.ClaCla(t_temp)        #calculating saturation vapor pressure Es
   SShums<-SH(Es * 100,p=101325)  #calculating saturated specific humidity
