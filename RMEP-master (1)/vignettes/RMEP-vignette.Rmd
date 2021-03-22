@@ -1,0 +1,131 @@
+---
+title: "<center>Simulating Surface Energy Budget and Evapotranspiration with RMEP</center>"
+author: "Yong Yang^[goku@hust.edu.cn],Huaiwei Sun^[hsun@hust.edu.cn]"
+date: "version 2.0, 13-Mar-2021"
+output: 
+   pdf_document: 
+     latex_engine: xelatex
+vignette: >
+  %\VignetteIndexEntry{RMEP-vignette}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setting up the environment
+
+Loading the *RMEP* library, which contains data and functions.
+```{r message=FALSE}
+library(RMEP)
+```
+
+- The code below show the simple example in the [RMEP](https://github.com/Yangyonghust/RMEP) package. The evapotranspiration(ETMEP, mm/day), sensible heat flux(HMEP, W/m^2^), latent heat flux(EMEP, W/m^2^), ground heat flux(GMEP, W/m^2^) and effective numbers(ef_id) are given in the outputs list.
+
+# Usage
+RMEP(Rn,RnL,qs,Ts,type,I,z,...)
+
+# Example
+
+## Calculate evapotranspiration(ET) and heat fluxes
+Three variables are required at least in theory for the maximum entropy production (MEP) model inputs, including the net radiation (Rn), specific humidity (qs) and surface temperature (Ts). Net long wave radiation (RnL) variable is also introducing in the RMEP for the case of Water-snow-ice surface in the MEP formulations.
+```{r}
+RMEP(Rn=300,RnL=100,qs=0.004,Ts=25,I=600,z=2.5,type=1)
+```
+-  After calculating, the actual ET is 2.546416 (mm/day), the H, E and G are 136.7877, 72.20737, 91.00497 (W/m^2^) respectively, and the effective number is 1. Parameter "Type" represents the condition of surface land cover, type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface, and the default is 1.Parameter "I" (constant) is the media thermal inertial (units:TIU),default is 600 TIU. Parameter "z" (constant) is the theoretical height above surface (unit:m), and default is 2.5 m.
+
+-  If you want to calculate potential evapotranspiration (PET), only the Rn and Ts two variables are needed.
+```{r}
+RMEPPET(Rn=300,RnL=100,Ts=25,type=2)
+
+```
+-  The PET is 7.386154 mm/day.
+
+## Calculate the specific humidity for MEP model input
+
+To calculate specific humidity(qs), three variables are needed, including: Air temperature(TA, unit: deg C), Relative humidity(RH, unit: percent), and Atmospheric pressure(PA, unit: kPa).
+```{r}
+Shum(TA=20,PA=101,RH=50)
+
+```
+- The qs is 0.007311296 kg/kg.
+
+## Calculate the saturated specific humidity for MEP model input
+Only one variable: surface temperature(Ts, unit: deg C) are required for calculating saturated specific humidity.
+```{r}
+SShum(Ts=20)
+
+```
+- The saturated specific humidity is 0.01464032 kg/kg.
+
+## Analysis of time series data
+A time series based dataset "datademo" is used for analysis with RMEP, which contains 8 variables during 1-30, June 2016 with half-hourly time step. 
+```{r fig.height=4, fig.width=7, warning=FALSE}
+#Load example data
+data("datademo") 
+Data <- datademo
+Data[1:10,] #View the data and variables
+qs <- Shum(TA <- Data$TA,PA <- Data$PA,RH <- Data$RH) #Calculate specific humidity
+Rn <- Data$NETRAD;RnL <- Data$NETRAD #RnL is not used in type=1 so let it equals to Rn
+Ts <- Data$TS #Surface temperature
+output <- RMEP(Rn,RnL,qs,Ts,type=1) #The results is obtained in the "output" list
+#The results of H, E and G as a vector
+simH <- t(output$HMEP);simE <- t(output$EMEP);simG <- t(output$GMEP)
+
+#"ggplot2" is used to produce plot between RMEP results and observations
+library(ggplot2)
+lm(simH~Data$H) #Linear fit between calculated and observed H
+#Scatter plot of MEP estimated and observed H
+qplot(Data$H,simH)+geom_point(col="blue")+
+  geom_smooth(method="lm",formula = y~x,col="red",lty=1)+
+  geom_abline(intercept=0, slope=1,col="black",lty=5,lwd=1)+
+  labs(x="Hobs",y="HMEP",title = "Ro4")+
+  annotate("text",x=200,y=50,label="y=0.93x+23.29") 
+
+# Time series change between RMEP calculations and measurements
+xlab <- seq(1,length(Data$H),by=1)
+timeseries <- data.frame(xlab,Data$H,simH)
+fill=c("black","red")
+Hplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$H,color="Measured"))+
+  geom_line(aes(x=xlab,y=simH,color="RMEP"))+labs(x="",y="H(W/m2)",title="Ro4")
+Hplot # Time series of calculated H and measured H
+
+Eplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$LE,color="Measured"))+
+  geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="E(W/m2)",title="Ro4")
+Eplot # Time series of calculated E and measured E
+
+Gplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$G,color="Measured"))+
+  geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="G(W/m2)",title="Ro4")
+Gplot # Time series of calculated G and measured G
+
+```
+
+# Software details
+This tutorial was built under: 
+
+```{r echo=FALSE}
+sessionInfo()$platform
+sessionInfo()$R.version$version.string 
+paste("RMEP", sessionInfo()$otherPkgs$RMEP$Version)
+```
+
+# References
+
+[1] Wang,J., &  Bras,R.L..(2009). A model of surface heat fluxes based on the theory of maximum entropy production. Water Resources Research, 45(11), 130-142.
+
+Yang, Y., Sun, H., and Wang, J. An R tool for Capturing Dynamics of Actual Evapotranspiration with MEP model and its application in Amazon, EGU General Assembly 2020, Online, 4–8 May 2020, EGU2020-1034, https://doi.org/10.5194/egusphere-egu2020-1034. 
+
+
+# Version history
+
+* v0.2: Mar 2021
+* v0.1: Dec 2020
+
