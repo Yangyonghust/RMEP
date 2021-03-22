@@ -1,13 +1,11 @@
 Package: RMEP
-Title: Calculating energy fluxes and ET by  maximum entropy production (MEP) model.
+Title: Calculating Energy Fluxes and Evapotranspiration by Maximum Entropy Production Model
 Version: 2.0
-date: 2020-12-26
+Date: 2021-03-13
 Author: Huaiweisun<hsun@hust.edu.cn>,Yongyang<goku@hust.edu.cn>
 Maintainer: Yongyang<goku@hust.edu.cn>
-Description: Accurate estimate of energy budget and evapotranspiration are significant in global ecosystem and climate.This package, based on the maximum entropy production(MEP) model,providing functions for calculating latent heat flux, sensible heat flux,ground heat flux as well as evapotranspiration(actual ET and potential ET).
+Description: Accurate estimate of energy budget and evapotranspiration are significant in global ecosystem and climate.This package, based on the maximum entropy production(MEP) model,providing functions for calculating latent heat flux, sensible heat flux,ground heat flux as well as evapotranspiration(actual ET and potential ET)，which can be applied in the fields of hydrology, meteorology and geophysics.
 Imports:
-    pracma,
-    humidity,
     ggplot2
 Depends: 
     pracma (>= 2.2.5),

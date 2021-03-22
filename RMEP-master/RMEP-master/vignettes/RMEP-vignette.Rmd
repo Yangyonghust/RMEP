@@ -1,13 +1,14 @@
 ---
-title: <center>Simulating Surface Energy Budget and Evapotranspiration with RMEP</center>
-author:
-- Yong Yang^[goku@hust.edu.cn],Huaiwei Sun^[hsun@hust.edu.cn]
-date: " version 2.0, 11-Feb-2021"
-output: rmarkdown::html_vignette
+title: "<center>Simulating Surface Energy Budget and Evapotranspiration with RMEP</center>"
+author: "Yong Yang^[goku@hust.edu.cn],Huaiwei Sun^[hsun@hust.edu.cn]"
+date: "version 2.0, 13-Mar-2021"
+output: 
+   pdf_document: 
+     latex_engine: xelatex
 vignette: >
   %\VignetteIndexEntry{RMEP-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -73,26 +74,36 @@ qs <- Shum(TA <- Data$TA,PA <- Data$PA,RH <- Data$RH) #Calculate specific humidi
 Rn <- Data$NETRAD;RnL <- Data$NETRAD #RnL is not used in type=1 so let it equals to Rn
 Ts <- Data$TS #Surface temperature
 output <- RMEP(Rn,RnL,qs,Ts,type=1) #The results is obtained in the "output" list
-simH <- t(output$HMEP);simE <- t(output$EMEP);simG <- t(output$GMEP)#The results of H, E and G as a vector
+#The results of H, E and G as a vector
+simH <- t(output$HMEP);simE <- t(output$EMEP);simG <- t(output$GMEP)
 
-#Package "ggplot2" is used to produce time series plot between RMEP results and observations
+#"ggplot2" is used to produce plot between RMEP results and observations
 library(ggplot2)
 lm(simH~Data$H) #Linear fit between calculated and observed H
-qplot(Data$H,simH)+geom_point(col="blue")+geom_smooth(method="lm",formula = y~x,col="red",lty=1)+
-  geom_abline(intercept=0, slope=1,col="black",lty=5,lwd=1)+labs(x="Hobs",y="HMEP",title = "Ro4")+
-  annotate("text",x=200,y=50,label="y=0.93x+23.29")  #Scatter plot of MEP estimated and observed H
+#Scatter plot of MEP estimated and observed H
+qplot(Data$H,simH)+geom_point(col="blue")+
+  geom_smooth(method="lm",formula = y~x,col="red",lty=1)+
+  geom_abline(intercept=0, slope=1,col="black",lty=5,lwd=1)+
+  labs(x="Hobs",y="HMEP",title = "Ro4")+
+  annotate("text",x=200,y=50,label="y=0.93x+23.29") 
 
 # Time series change between RMEP calculations and measurements
 xlab <- seq(1,length(Data$H),by=1)
 timeseries <- data.frame(xlab,Data$H,simH)
 fill=c("black","red")
-Hplot <- ggplot(timeseries,aes(x=xalab))+geom_line(aes(x=xlab,y=Data$H,color="Measured"))+geom_line(aes(x=xlab,y=simH,color="RMEP"))+labs(x="",y="H(W/m2)",title="Ro4")
+Hplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$H,color="Measured"))+
+  geom_line(aes(x=xlab,y=simH,color="RMEP"))+labs(x="",y="H(W/m2)",title="Ro4")
 Hplot # Time series of calculated H and measured H
 
-Eplot <- ggplot(timeseries,aes(x=xalab))+geom_line(aes(x=xlab,y=Data$LE,color="Measured"))+geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="E(W/m2)",title="Ro4")
+Eplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$LE,color="Measured"))+
+  geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="E(W/m2)",title="Ro4")
 Eplot # Time series of calculated E and measured E
 
-Gplot <- ggplot(timeseries,aes(x=xalab))+geom_line(aes(x=xlab,y=Data$G,color="Measured"))+geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="G(W/m2)",title="Ro4")
+Gplot <- ggplot(timeseries,aes(x=xalab))+
+  geom_line(aes(x=xlab,y=Data$G,color="Measured"))+
+  geom_line(aes(x=xlab,y=simE,color="RMEP"))+labs(x="",y="G(W/m2)",title="Ro4")
 Gplot # Time series of calculated G and measured G
 
 ```
@@ -106,8 +117,15 @@ sessionInfo()$R.version$version.string
 paste("RMEP", sessionInfo()$otherPkgs$RMEP$Version)
 ```
 
+# References
+
+[1] Wang,J., &  Bras,R.L..(2009). A model of surface heat fluxes based on the theory of maximum entropy production. Water Resources Research, 45(11), 130-142.
+
+Yang, Y., Sun, H., and Wang, J. An R tool for Capturing Dynamics of Actual Evapotranspiration with MEP model and its application in Amazon, EGU General Assembly 2020, Online, 4–8 May 2020, EGU2020-1034, https://doi.org/10.5194/egusphere-egu2020-1034. 
+
+
 # Version history
 
-* v0.2: Feb 2021
+* v0.2: Mar 2021
 * v0.1: Dec 2020
 

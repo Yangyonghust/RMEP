@@ -23,9 +23,6 @@ A data frame with 1170 rows and 13 variables:
   ...
 }
 }
-\source{
-\url{http://www.datademo.info/}
-}
 \usage{
 datademo
 }

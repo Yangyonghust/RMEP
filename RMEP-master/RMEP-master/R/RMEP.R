@@ -9,6 +9,7 @@
 #' @param z theoretical height above surface (unit:m), constant value and default is 2.5 m
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
 #' @return A list includes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and evapotranspiration(ETMEP,mm/day)
+#' @importFrom pracma ones zeros isempty fzero
 #' @examples
 #' RMEP(Rn=200,RnL=100,qs=0.003,Ts=20,type=1)
 #' RMEP(Rn=300,RnL=100,qs=0.004,Ts=25,I=800,z=8,type=1)
@@ -49,7 +50,7 @@ RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
   }
 
   if (1-isempty(sta)){
-    I0[sta] = rhoa[sta] * Cp * sqrt(C1[,1] * k * z) * (C2[,1] * k * z * g/(rhoa[unsta] * Cp * Tr))^(e16);
+    I0[sta] = rhoa[sta] * Cp * sqrt(C1[,2] * k * z) * (C2[,2] * k * z * g/(rhoa[sta] * Cp * Tr))^(e16);
   }
   ice_num = which(Ts < T0);                      # ice/snow condition (only used in water-snow-ice version type = 3)
   Lv_vec = ones(1,length(Ts)) * Lv;              # create Lv vector
@@ -120,6 +121,8 @@ RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
 #' @param z theoretical height above surface (unit:m),constant value and default is 2.5 m
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
 #' @return A list concludes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and potential ET(PETMEP,W/m2)
+#' @importFrom pracma ones zeros isempty fzero
+#' @importFrom humidity C2K SVP.ClaCla SH
 #' @examples
 #' RMEPPET(Rn=200,RnL=100,Ts=20,type=1)
 #' RMEPPET(Rn=300,RnL=100,Ts=25,I=800,z=8,type=1)

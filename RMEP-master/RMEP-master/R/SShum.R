@@ -1,6 +1,7 @@
 #' calculate saturated specific humidity for MEP model input
 #' @param  Ts surface temperature(unit: deg C)
 #' @return saturated specific humidity(unit:kg/kg)
+#' @importFrom humidity SVP.ClaCla
 #' @examples
 #' SShum(Ts=20)
 #' @export

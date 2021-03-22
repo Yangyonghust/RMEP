@@ -20,5 +20,4 @@
 #'   \item{PA}{atmospheric pressure, in Kpa}
 #'   ...
 #' }
-#' @source \url{http://www.datademo.info/}
 "datademo"

@@ -1,2 +1,2 @@
 # RMEP
-Calculating energy fluxes and evapotranspiration by maximum entropy production (MEP) model.
+MEP model by R

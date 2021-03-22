@@ -3,6 +3,7 @@
 #' @param RH Relative humidity(unit: percent)
 #' @param PA Atmospheric pressure(unit: kPa)
 #' @return specific humidity(unit:kg/kg)
+#' @importFrom humidity SVP WVP2
 #' @examples
 #' Shum(TA=20,PA=101,RH=50)
 #' @export
