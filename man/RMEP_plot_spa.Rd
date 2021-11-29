@@ -2,7 +2,7 @@
 % Please edit documentation in R/Plotfunction.R
 \name{RMEP_plot_spa}
 \alias{RMEP_plot_spa}
-\title{Spatial distribution map of MEP estimated evapotranspiration}
+\title{Spatial distribution plot}
 \usage{
 RMEP_plot_spa(
   lon,
@@ -24,7 +24,7 @@ RMEP_plot_spa(
 \item{legends}{The legend of figure}
 }
 \description{
-Generating a map for spatial distribution of evapotranspiration.The plot includes image and legend, generated based on the fields package.
+Generating a spatial distribution map of evapotranspiration.The plot includes image and legend, generated based on the fields package.
 }
 \examples{
 RMEP_plot_spa(lon,lat,ETannual)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Plotfunction.R
 \name{RMEP_plot_sca}
 \alias{RMEP_plot_sca}
-\title{Scatter plot between MEP estimates and observations}
+\title{Scatter plot between MEP estimations and observations}
 \usage{
 RMEP_plot_sca(obs, MEP, labx, laby)
 }

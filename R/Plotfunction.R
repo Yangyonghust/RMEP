@@ -15,7 +15,7 @@ RMEP_plot_line <- function(timeseries,labx,laby){  ### timeseries contains three
     theme(legend.title=element_blank(),legend.position = c(0.9, 0.9))+scale_colour_manual(values = c("#3f60aa","red"))
 }
 
-#' Scatter plot between MEP estimates and observations
+#' Scatter plot between MEP estimations and observations
 #'
 #' Generating a scatter plot with MEP estimations and observations. The labels contains: label plot with the regression equation (a fitted polynomial model) and label with coefficient of determination (R^2) for fitted model.
 #' @param MEP A vector of MEP estimations
@@ -38,9 +38,9 @@ RMEP_plot_sca <- function(obs,MEP,labx,laby){
                  formula=y~x,parse=TRUE,size=5,label.x=0.05,label.y=0.9)+theme_bw()
 }
 
-#' Spatial distribution map of MEP estimated evapotranspiration
+#' Spatial distribution plot
 #'
-#' Generating a map for spatial distribution of evapotranspiration.The plot includes image and legend, generated based on the fields package.
+#' Generating a spatial distribution map of evapotranspiration.The plot includes image and legend, generated based on the fields package.
 #' @param lon The varaible of longitude
 #' @param lat The variable of latitude
 #' @param MEP The variable of MEP estimated evapotranspiration
