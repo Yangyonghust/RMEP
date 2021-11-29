@@ -2,9 +2,9 @@
 % Please edit documentation in R/RMEP.R
 \name{RMEP}
 \alias{RMEP}
-\title{Calculate energy fluxes and actual evapotranspiration}
+\title{Calculate evapotranspiration and energy fluxes with MEP method}
 \usage{
-RMEP(Rn, RnL, qs, Ts, I = 600, z = 2.5, type = 1)
+RMEP(Rn, RnL, qs, Ts, I = 800, z = 2.5, type = 1)
 }
 \arguments{
 \item{Rn}{net radiation (unit:W/m2)}
@@ -15,7 +15,7 @@ RMEP(Rn, RnL, qs, Ts, I = 600, z = 2.5, type = 1)
 
 \item{Ts}{surface temperature (unit:Celsius)}
 
-\item{I}{media thermal inertial (units:TIU),default is 600 TIU}
+\item{I}{media thermal inertial (units:TIU),default is 800 TIU}
 
 \item{z}{theoretical height above surface (unit:m), constant value and default is 2.5 m}
 
@@ -25,7 +25,7 @@ RMEP(Rn, RnL, qs, Ts, I = 600, z = 2.5, type = 1)
 A list includes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and evapotranspiration(ETMEP,mm/day)
 }
 \description{
-Calculate energy fluxes and evapotranspiration based on the maximum entropy production(MEP) model
+Calculate actual evapotranspiration, potential evapotranspiration, senseble heat flux and ground heat flux based on the maximum entropy production(MEP) model.
 }
 \examples{
 RMEP(Rn=200,RnL=100,qs=0.003,Ts=20,type=1)

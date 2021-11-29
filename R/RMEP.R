@@ -1,11 +1,11 @@
-#' Calculate energy fluxes and actual evapotranspiration
+#' Calculate evapotranspiration and energy fluxes with MEP method
 #'
-#' Calculate energy fluxes and evapotranspiration based on the maximum entropy production(MEP) model
+#' Calculate actual evapotranspiration, potential evapotranspiration, senseble heat flux and ground heat flux based on the maximum entropy production(MEP) model.
 #' @param Rn net radiation (unit:W/m2)
 #' @param RnL net long-wave radiation (unit:W/m2)
 #' @param Ts surface temperature (unit:Celsius)
 #' @param qs specific humidity (unit:kg/kg)
-#' @param I media thermal inertial (units:TIU),default is 600 TIU
+#' @param I media thermal inertial (units:TIU),default is 800 TIU
 #' @param z theoretical height above surface (unit:m), constant value and default is 2.5 m
 #' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
 #' @return A list includes latent heat flux(EMEP,W/m2),sensible heat flux(HMEP,W/m2),ground heat flux(GMEP,W/m2) and evapotranspiration(ETMEP,mm/day)
@@ -14,7 +14,7 @@
 #' RMEP(Rn=200,RnL=100,qs=0.003,Ts=20,type=1)
 #' RMEP(Rn=300,RnL=100,qs=0.004,Ts=25,I=800,z=8,type=1)
 #' @export
-RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
+RMEP<-function(Rn, RnL, qs, Ts, I=800, z=2.5, type=1){
 
   # Parameters
   rhoa=Rn * 0 + 1.18                              # column vector of air density (kg*m^-3)
@@ -24,9 +24,9 @@ RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
   Ts = Ts + T0                                    # Ts in K
   Tr = Rn*0 + 300                                 # reference temperature
   Cp = Rn*0 + 1006                                # specific heat of air
-  Rv = Rn*0 + 465                                 # gas constant of water vapor
-  a = Rn*0 + 1                                    # coefficeint of water version
-  g = Rn*0 + 9.81                                 # gravitational accelaration
+  Rv = Rn*0 + 461.5                               # gas constant of water vapor
+  a = Rn*0 + 1                                    # coefficient of water version
+  g = Rn*0 + 9.81                                 # gravitational acceleration
   k = Rn*0 + 0.4                                  # Von Karman constant
   Lv = Rn*0 + 2.5E06                              # vaporization heat of water vapor
   Liv = Rn*0 + 2.83E06                            # vaporization heat of ice
@@ -127,7 +127,7 @@ RMEP<-function(Rn, RnL, qs, Ts, I=600, z=2.5, type=1){
 #' RMEPPET(Rn=200,RnL=100,Ts=20,type=1)
 #' RMEPPET(Rn=300,RnL=100,Ts=25,I=800,z=8,type=1)
 #' @export
-RMEPPET <- function(Rn, RnL,Ts,I=600, z=2.5, type=1){
+RMEPPET <- function(Rn, RnL,Ts,I=800, z=2.5, type=1){
   t_temp<-C2K(Ts)
   Es<-SVP.ClaCla(t_temp)        #calculating saturation vapor pressure Es
   SShums<-SH(Es * 100,p=101325)  #calculating saturated specific humidity
@@ -138,4 +138,35 @@ RMEPPET <- function(Rn, RnL,Ts,I=600, z=2.5, type=1){
 }
 
 
+
+
+#' Implementing MEP model with NetCDF format data
+#'
+#' Calculate actual evapotranspiration by the MEP model with data of NetCDF format. The dimensions of all inputs must be consistent.
+#' @param Rn net radiation (unit:W/m2)
+#' @param RnL net long-wave radiation (unit:W/m2)
+#' @param Ts surface temperature (unit:Celsius)
+#' @param qs specific humidity (unit:kg/kg)
+#' @param I media thermal inertial (units:TIU)
+#' @param z theoretical height above surface (unit:m)
+#' @param type 1 for bare soil surface or short canopy, 2 for dense canopy and 3 for Water-snow-ice surface
+#' @return Latent heat flux (unit:W/m2)
+#' @importFrom pracma ones zeros isempty fzero
+#' @examples
+#' RMEP_nc(Rn, RnL, qs, Ts, I, z, type)
+#' @export
+RMEP_nc <- function(Rn, RnL, qs, Ts, I, z, type){
+  MEPLE <- array(NA,dim(Rn))
+  MEPLEcal <- function(Rn,RnL,qs,Ts,I,z,type){
+    if(is.na(Rn)|is.na(RnL)|is.na(Ts)|is.na(qs)|is.na(z)|is.na(type)){
+      return(NA)
+    }
+    return(RMEP(Rn,RnL,qs,Ts,I,z,type)$EMEP)
+  }
+
+  for (ii in 1:length(Rn)){
+    MEPLE[ii] <- MEPLEcal(Rn[ii],RnL[ii],qs[ii],Ts[ii],I[ii],z[ii],type[ii])
+  }
+  return(MEPLE)
+}
 

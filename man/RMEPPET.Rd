@@ -4,7 +4,7 @@
 \alias{RMEPPET}
 \title{Calculate potential ET}
 \usage{
-RMEPPET(Rn, RnL, Ts, I = 600, z = 2.5, type = 1)
+RMEPPET(Rn, RnL, Ts, I = 800, z = 2.5, type = 1)
 }
 \arguments{
 \item{Rn}{net radiation(unit:W/m2)}
